@@ -47,31 +47,26 @@ MemoryGame = function (gs) {
     // Inicialización del juego
     this.initGame = function () {
         //random set of cards to initialize
-        while (this.maze.length < 16) {
+        while (this.maze.length < this.cards.length * 2) {
             let number = Math.floor(Math.random() * this.cards.length);
             if (this.cards[number].times > 0) {
                 this.maze.push(new MemoryGameCard(this.cards[number].name));
                 this.cards[number].times--;
             }
         }
-        //requestAnimationFrame(game.loop);
-        this.loop();
+        requestAnimationFrame(game.loop);
     };
-    this.loop = function ( /*timestamp*/ ) {
-        /* if (skip > 0) {
-             --skip;
-         } else {
-             var dt = (timestamp - oldtimestamp) / 1000;
-             oldtimestamp = timestamp;
-             /*gs.ctx.fillStyle = "#000";
-             gs.ctx.fillRect(0, 0, gs.width, gs.length);*/
-        setInterval(() => {
-            this.draw();
-        }, 16);
-        //analytics.step(dt);
-        //analytics.draw(gs.ctx);
-        //}
-        //requestAnimationFrame(game.loop);
+    this.loop = function (timestamp) {
+        if (skip > 0) {
+            --skip;
+        } else {
+            var dt = (timestamp - oldtimestamp) / 1000;
+            oldtimestamp = timestamp;
+            game.draw();
+            analytics.step(dt);
+            analytics.draw(ctx);
+        }
+        requestAnimationFrame(game.loop);
     };
     this.draw = function () {
         gs.drawMessage(this.state + " Clicks = " + this.clicks);
@@ -100,8 +95,6 @@ MemoryGame = function (gs) {
                 }
                 this.cards_turned[0].found();
                 this.cards_turned[1].found();
-
-
             } else {
                 this.state = "Try Again!!";
                 let card1 = this.cards_turned[0];
@@ -113,8 +106,6 @@ MemoryGame = function (gs) {
             }
             this.cards_turned = [];
         }
-
-        //requestAnimationFrame(game.loop);
     };
 }
 
@@ -153,7 +144,7 @@ MemoryGameCard = function (id) {
     };
 };
 
-/*var analytics = new function () {
+var analytics = new function () {
     var lastDate = Date.now();
     this.getDT = function () {
         var now = Date.now();
@@ -177,8 +168,7 @@ MemoryGameCard = function (id) {
     this.draw = function (ctx) {
         ctx.fillStyle = "#FFFFFF";
         ctx.textAlign = "left";
-
-        ctx.font = "bold 16px arial";
-        ctx.fillText(Math.round(fps), 0, 20);
+        ctx.font = "bold 8px arial";
+        ctx.fillText("FPS = " + Math.round(fps), 5, 40);
     };
-}*/
+}
