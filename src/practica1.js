@@ -76,7 +76,6 @@ MemoryGame = function (gs) {
     };
 
     this.cards_turned = [];
-
     this.onClick = function (cardId) {
         if (this.cards_turned.length < 2) {
             if (this.maze[cardId].back) {
